@@ -2,15 +2,25 @@
 
 <% content_for :title, "Brands" %>
 
-<h1>Brands</h1>
+<h1>Listing Brands</h1>
 
 <div id="brands">
-  <% @brands.each do |brand| %>
-    <%= render brand %>
-    <p>
-      <%= link_to "Show this brand", brand %>
-    </p>
-  <% end %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @brands.each do |brand| %>
+        <%= render brand %>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
-<%= link_to "New brand", new_brand_path %>
+<%= link_to 'New Brand', new_brand_path %>
+
+<%= paginate @brands %>

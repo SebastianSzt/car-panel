@@ -3,7 +3,7 @@ class BrandsController < ApplicationController
 
   # GET /brands or /brands.json
   def index
-    @brands = Brand.all
+    @brands = Brand.page(params[:page]).per(10)
   end
 
   # GET /brands/1 or /brands/1.json
@@ -49,6 +49,7 @@ class BrandsController < ApplicationController
 
   # DELETE /brands/1 or /brands/1.json
   def destroy
+    @brand = Brand.find(params[:id])
     @brand.destroy!
 
     respond_to do |format|

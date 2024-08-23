@@ -1,10 +1,29 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @brand %>
+<p>
+  <strong>Name:</strong>
+  <%= @brand.name %>
+</p>
 
-<div>
-  <%= link_to "Edit this brand", edit_brand_path(@brand) %> |
-  <%= link_to "Back to brands", brands_path %>
+<h2>Models</h2>
 
-  <%= button_to "Destroy this brand", @brand, method: :delete %>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @brand.models.each do |model| %>
+      <tr>
+        <td><%= model.name %></td>
+        <td><%= model.year %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_brand_path(@brand) %> |
+<%= link_to 'Back', brands_path %>
