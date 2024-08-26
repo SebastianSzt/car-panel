@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   resources :models
   resources :brands
-  devise_for :users
+
+  devise_for :users, controllers: {
+    sessions: "users/sessions"
+  }
 
   root "brands#index"
 
