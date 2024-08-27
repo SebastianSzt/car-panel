@@ -1,38 +1,41 @@
 class ModelsController < ApplicationController
+  before_action :user_only, only: [ :edit, :update ]
+  before_action :admin_only, only: [ :new, :create, :destroy ]
   before_action :set_model, only: %i[ show edit update destroy ]
+  before_action :set_brand
 
-  # GET /models or /models.json
+  # GET /brands/:brand_id/models or /brands/:brand_id/models.json
   def index
-    @models = Model.all
+    @models = Model.where(brand_id: params[:brand_id])
     @models.each do |model|
       model.brand_name = Brand.find(model.brand_id).name
     end
   end
 
-  # GET /models/1 or /models/1.json
+  # GET /brands/:brand_id/models/1 or /brands/:brand_id/models/1.json
   def show
-    @model.brand_name = Brand.find(@model.brand_id).name
+    @model = Model.find(params[:id])
+    @brand = Brand.find(@model.brand_id)
+    @model.brand_name = @brand.name
   end
 
-  # GET /models/new
+  # GET /brands/:brand_id/models/new
   def new
     @model = Model.new
   end
 
-  # GET /models/1/edit
+  # GET /brands/:brand_id/models/1/edit
   def edit
-    @model.brand_name = Brand.find(@model.brand_id).name
   end
 
-  # POST /models or /models.json
+  # POST /brands/:brand_id/models or /brands/:brand_id/models.json
   def create
-    params = process_params
-
-    @model = Model.new(params)
+    @model = Model.new(model_params)
+    @model.brand_id = params[:brand_id]
 
     respond_to do |format|
       if @model.save
-        format.html { redirect_to model_url(@model), notice: "Model was successfully created." }
+        format.html { redirect_to brand_model_path(@model.brand, @model), notice: "Model was successfully created." }
         format.json { render :show, status: :created, location: @model }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -41,13 +44,11 @@ class ModelsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /models/1 or /models/1.json
+  # PATCH/PUT /brands/:brand_id/models/1 or /brands/:brand_id/models/1.json
   def update
-    params = process_params
-
     respond_to do |format|
-      if @model.update(params)
-        format.html { redirect_to model_url(@model), notice: "Model was successfully updated." }
+      if @model.update(model_params)
+        format.html { redirect_to brand_model_path(@model.brand, @model), notice: "Model was successfully updated." }
         format.json { render :show, status: :ok, location: @model }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,34 +57,34 @@ class ModelsController < ApplicationController
     end
   end
 
-  # DELETE /models/1 or /models/1.json
+  # DELETE /brands/:brand_id/models/1 or /brands/:brand_id/models/1.json
   def destroy
-    @model.destroy!
-
+    @model.destroy
     respond_to do |format|
-      format.html { redirect_to models_url, notice: "Model was successfully destroyed." }
+      format.html { redirect_to brand_models_path(@model.brand), notice: "Model was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_model
-      @model = Model.find(params[:id])
-    end
 
-    def process_params
-      brand = Brand.find_by(name: params[:model][:brand_name])
-      return nil if brand.nil?
+  def set_model
+    @model = Model.find(params[:id])
+  end
 
-      processed_params = model_params.dup
-      processed_params.delete(:brand_name)
-      processed_params.merge!(brand_id: brand.id)
-      processed_params
-    end
+  def set_brand
+    @brand = Brand.find(params[:brand_id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def model_params
-      params.require(:model).permit(:name, :year, :brand_name)
-    end
+  def model_params
+    params.require(:model).permit(:name, :description)
+  end
+
+  def admin_only
+    redirect_to(root_path, alert: "Not authorized") unless current_user.admin?
+  end
+
+  def user_only
+    redirect_to(root_path, alert: "Not authorized") unless user_signed_in?
+  end
 end

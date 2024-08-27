@@ -1,26 +1,26 @@
-<p style="color: green"><%= notice %></p>
+<!-- app/views/brands/index.html.erb -->
+<h1>Brands</h1>
 
-<% content_for :title, "Brands" %>
+<%= link_to 'New Brand', brands_path, class: 'btn btn-primary mb-3' %>
+<%= link_to 'Import Data', '#', class: 'btn btn-secondary mb-3' %>
 
-<h1>Listing Brands</h1>
-
-<div id="brands">
-  <table>
-    <thead>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @brands.each do |brand| %>
       <tr>
-        <th>Name</th>
-        <th colspan="3"></th>
+        <td><%= brand.name %></td>
+        <td><%= link_to 'Show', brand, class: 'btn btn-info' %></td>
+        <td><%= link_to 'Edit', edit_brand_path(brand), class: 'btn btn-warning' %></td>
+        <td><%= button_to 'Destroy', brand, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
       </tr>
-    </thead>
-
-    <tbody>
-      <% @brands.each do |brand| %>
-        <%= render brand %>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<%= link_to 'New Brand', new_brand_path %>
+    <% end %>
+  </tbody>
+</table>
 
 <%= paginate @brands %>

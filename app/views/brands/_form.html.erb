@@ -1,22 +1,22 @@
-<%= form_with(model: brand) do |form| %>
+<!-- app/views/brands/_form.html.erb -->
+<%= form_with(model: brand, local: true) do |form| %>
   <% if brand.errors.any? %>
-    <div style="color: red">
+    <div id="error_explanation">
       <h2><%= pluralize(brand.errors.count, "error") %> prohibited this brand from being saved:</h2>
 
       <ul>
-        <% brand.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% brand.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: 'form-control' %>
   </div>
-
-  <div>
-    <%= form.submit %>
+  <br>
+  <div class="form-group">
+    <%= form.submit class: 'btn btn-primary mb-3' %>
   </div>
 <% end %>

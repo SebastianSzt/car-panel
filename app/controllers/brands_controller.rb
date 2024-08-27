@@ -1,4 +1,6 @@
 class BrandsController < ApplicationController
+  before_action :user_only, only: [ :edit, :update ]
+  before_action :admin_only, only: [ :new, :create, :destroy ]
   before_action :set_brand, only: %i[ show edit update destroy ]
 
   # GET /brands or /brands.json
@@ -8,6 +10,8 @@ class BrandsController < ApplicationController
 
   # GET /brands/1 or /brands/1.json
   def show
+    @brand = Brand.find(params[:id])
+    @models = @brand.models.page(params[:page]).per(10)
   end
 
   # GET /brands/new
@@ -25,7 +29,7 @@ class BrandsController < ApplicationController
 
     respond_to do |format|
       if @brand.save
-        format.html { redirect_to brand_url(@brand), notice: "Brand was successfully created." }
+        format.html { redirect_to @brand, notice: "Brand was successfully created." }
         format.json { render :show, status: :created, location: @brand }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +42,7 @@ class BrandsController < ApplicationController
   def update
     respond_to do |format|
       if @brand.update(brand_params)
-        format.html { redirect_to brand_url(@brand), notice: "Brand was successfully updated." }
+        format.html { redirect_to @brand, notice: "Brand was successfully updated." }
         format.json { render :show, status: :ok, location: @brand }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,9 +53,7 @@ class BrandsController < ApplicationController
 
   # DELETE /brands/1 or /brands/1.json
   def destroy
-    @brand = Brand.find(params[:id])
-    @brand.destroy!
-
+    @brand.destroy
     respond_to do |format|
       format.html { redirect_to brands_url, notice: "Brand was successfully destroyed." }
       format.json { head :no_content }
@@ -59,13 +61,20 @@ class BrandsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_brand
-      @brand = Brand.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def brand_params
-      params.require(:brand).permit(:name)
-    end
+  def set_brand
+    @brand = Brand.find(params[:id])
+  end
+
+  def brand_params
+    params.require(:brand).permit(:name, :description)
+  end
+
+  def admin_only
+    redirect_to(root_path, alert: "Not authorized") unless current_user.admin?
+  end
+
+  def user_only
+    redirect_to(root_path, alert: "Not authorized") unless user_signed_in?
+  end
 end

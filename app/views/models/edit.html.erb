@@ -1,12 +1,6 @@
-<% content_for :title, "Editing model" %>
+<!-- app/views/models/edit.html.erb -->
+<h1>Edit Model</h1>
 
-<h1>Editing model</h1>
+<%= render 'form', model: @model %>
 
-<%= render "form", model: @model %>
-
-<br>
-
-<div>
-  <%= link_to "Show this model", @model %> |
-  <%= link_to "Back to models", models_path %>
-</div>
+<%= link_to 'Back to Models', admin_brand_path(@model.brand), class: 'btn btn-secondary' %>

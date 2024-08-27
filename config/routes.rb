@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :models
-  resources :brands
+  resources :brands do
+    resources :models
+  end
 
   devise_for :users, controllers: {
     sessions: "users/sessions"
@@ -8,11 +9,12 @@ Rails.application.routes.draw do
 
   root "brands#index"
 
-  namespace :admin do
-    resources :brands do
-      resources :models
-    end
-  end
+  # namespace :admin do
+  #   resources :brands, controller: "brands" do
+  #     resources :models, controller: "models"
+  #   end
+  # end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

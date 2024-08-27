@@ -1,12 +1,6 @@
-<% content_for :title, "Editing brand" %>
+<!-- app/views/brands/edit.html.erb -->
+<h1>Edit Brand</h1>
 
-<h1>Editing brand</h1>
+<%= render 'form', brand: @brand %>
 
-<%= render "form", brand: @brand %>
-
-<br>
-
-<div>
-  <%= link_to "Show this brand", @brand %> |
-  <%= link_to "Back to brands", brands_path %>
-</div>
+<%= link_to 'Back', brands_path, class: 'btn btn-secondary' %>
