@@ -2,8 +2,9 @@ class Admin::ModelsController < ApplicationController
   before_action :authenticate_user!
   before_action :admin_only
   before_action :set_model, only: %i[ show edit update destroy ]
+  before_action :set_brand
 
-  # GET /models or /models.json
+  # GET /admin/brands/:brand_id/models or /admin/brands/:brand_id/models.json
   def index
     @models = Model.all
     @models.each do |model|
@@ -11,30 +12,30 @@ class Admin::ModelsController < ApplicationController
     end
   end
 
-  # GET /models/1 or /models/1.json
+  # GET /admin/brands/:brand_id/models/1 or /admin/brands/:brand_id/models/1.json
   def show
-    @model.brand_name = Brand.find(@model.brand_id).name
+    @model = Model.find(params[:id])
+    @brand = Brand.find(@model.brand_id)
+    @model.brand_name = @brand.name
   end
 
-  # GET /models/new
+  # GET /admin/brands/:brand_id/models/new
   def new
-    @model = Model.new
+    @model = @brand.models.build
   end
 
-  # GET /models/1/edit
+  # GET /admin/brands/:brand_id/models/1/edit
   def edit
     @model.brand_name = Brand.find(@model.brand_id).name
   end
 
-  # POST /models or /models.json
+  # POST /admin/brands/:brand_id/models or /admin/brands/:brand_id/models.json
   def create
-    params = process_params
-
-    @model = Model.new(params)
+    @model = @brand.models.build(model_params)
 
     respond_to do |format|
       if @model.save
-        format.html { redirect_to model_url(@model), notice: "Model was successfully created." }
+        format.html { redirect_to admin_brand_model_url(@brand, @model), notice: "Model was successfully created." }
         format.json { render :show, status: :created, location: @model }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -43,13 +44,11 @@ class Admin::ModelsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /models/1 or /models/1.json
+  # PATCH/PUT /admin/brands/:brand_id/models/1 or /admin/brands/:brand_id/models/1.json
   def update
-    params = process_params
-
     respond_to do |format|
-      if @model.update(params)
-        format.html { redirect_to model_url(@model), notice: "Model was successfully updated." }
+      if @model.update(model_params)
+        format.html { redirect_to admin_brand_model_url(@brand, @model), notice: "Model was successfully updated." }
         format.json { render :show, status: :ok, location: @model }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -58,12 +57,12 @@ class Admin::ModelsController < ApplicationController
     end
   end
 
-  # DELETE /models/1 or /models/1.json
+  # DELETE /admin/brands/:brand_id/models/1 or /admin/brands/:brand_id/models/1.json
   def destroy
     @model.destroy!
 
     respond_to do |format|
-      format.html { redirect_to models_url, notice: "Model was successfully destroyed." }
+      format.html { redirect_to admin_brand_url(@brand), notice: "Model was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -74,14 +73,8 @@ class Admin::ModelsController < ApplicationController
       @model = Model.find(params[:id])
     end
 
-    def process_params
-      brand = Brand.find_by(name: params[:model][:brand_name])
-      return nil if brand.nil?
-
-      processed_params = model_params.dup
-      processed_params.delete(:brand_name)
-      processed_params.merge!(brand_id: brand.id)
-      processed_params
+    def set_brand
+      @brand = Brand.find(params[:brand_id])
     end
 
     # Only allow a list of trusted parameters through.

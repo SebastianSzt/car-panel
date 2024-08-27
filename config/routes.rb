@@ -9,8 +9,9 @@ Rails.application.routes.draw do
   root "brands#index"
 
   namespace :admin do
-    resources :brands
-    resources :models
+    resources :brands do
+      resources :models
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

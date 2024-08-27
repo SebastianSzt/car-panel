@@ -1,33 +1,36 @@
+# app/controllers/admin/brands_controller.rb
 class Admin::BrandsController < ApplicationController
   before_action :authenticate_user!
   before_action :admin_only
   before_action :set_brand, only: %i[ show edit update destroy ]
 
-  # GET /brands or /brands.json
+  # GET /admin/brands or /admin/brands.json
   def index
     @brands = Brand.page(params[:page]).per(10)
   end
 
-  # GET /brands/1 or /brands/1.json
+  # GET /admin/brands/1 or /admin/brands/1.json
   def show
+    @brand = Brand.find(params[:id])
+    @models = @brand.models.page(params[:page]).per(10)
   end
 
-  # GET /brands/new
+  # GET /admin/brands/new
   def new
     @brand = Brand.new
   end
 
-  # GET /brands/1/edit
+  # GET /admin/brands/1/edit
   def edit
   end
 
-  # POST /brands or /brands.json
+  # POST /admin/brands or /admin/brands.json
   def create
     @brand = Brand.new(brand_params)
 
     respond_to do |format|
       if @brand.save
-        format.html { redirect_to brand_url(@brand), notice: "Brand was successfully created." }
+        format.html { redirect_to admin_brand_url(@brand), notice: "Brand was successfully created." }
         format.json { render :show, status: :created, location: @brand }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,11 +39,11 @@ class Admin::BrandsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /brands/1 or /brands/1.json
+  # PATCH/PUT /admin/brands/1 or /admin/brands/1.json
   def update
     respond_to do |format|
       if @brand.update(brand_params)
-        format.html { redirect_to brand_url(@brand), notice: "Brand was successfully updated." }
+        format.html { redirect_to admin_brand_url(@brand), notice: "Brand was successfully updated." }
         format.json { render :show, status: :ok, location: @brand }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,13 +52,13 @@ class Admin::BrandsController < ApplicationController
     end
   end
 
-  # DELETE /brands/1 or /brands/1.json
+  # DELETE /admin/brands/1 or /admin/brands/1.json
   def destroy
-    @brand = Brand.find(params[:id])
+    @brand = set_brand
     @brand.destroy!
 
     respond_to do |format|
-      format.html { redirect_to brands_url, notice: "Brand was successfully destroyed." }
+      format.html { redirect_to admin_brands_url, notice: "Brand was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -72,8 +75,6 @@ class Admin::BrandsController < ApplicationController
     end
 
     def admin_only
-      unless current_user&.admin?
-        redirect_to root_path, alert: "You are not allowed to access this page."
-      end
+      redirect_to(root_path, alert: "Not authorized") unless current_user.admin?
     end
 end
