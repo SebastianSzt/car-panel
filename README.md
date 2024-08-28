@@ -1,6 +1,6 @@
 # Car-Panel
 
-A Ruby on Rails application for managing car informations.
+This Ruby on Rails application is designed to manage car data. Built with the MVC architecture, it provides core functionalities such as user authentication via the Devise gem. The application also includes an administrative panel, enabling administrators to manage data by adding or deleting entries easily.
 
 ## Features
 
