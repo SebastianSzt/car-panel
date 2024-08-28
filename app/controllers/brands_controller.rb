@@ -70,11 +70,14 @@ class BrandsController < ApplicationController
     params.require(:brand).permit(:name, :description)
   end
 
-  def admin_only
-    redirect_to(root_path, alert: "Not authorized") unless current_user.admin?
-  end
 
   def user_only
     redirect_to(root_path, alert: "Not authorized") unless user_signed_in?
+  end
+
+  def admin_only
+    if current_user.nil? || !current_user.admin?
+      redirect_to(root_path, alert: "Not authorized")
+    end
   end
 end

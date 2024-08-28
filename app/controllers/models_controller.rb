@@ -77,14 +77,16 @@ class ModelsController < ApplicationController
   end
 
   def model_params
-    params.require(:model).permit(:name, :description)
-  end
-
-  def admin_only
-    redirect_to(root_path, alert: "Not authorized") unless current_user.admin?
+    params.require(:model).permit(:name, :year)
   end
 
   def user_only
     redirect_to(root_path, alert: "Not authorized") unless user_signed_in?
+  end
+
+  def admin_only
+    if current_user.nil? || !current_user.admin?
+      redirect_to(root_path, alert: "Not authorized")
+    end
   end
 end
