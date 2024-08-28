@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     resources :brands, only: [ :index, :new, :create, :destroy ] do
       resources :models, only: [ :new, :create, :destroy ]
       collection do
-        post :import
+        delete "delete_all"
       end
     end
   end

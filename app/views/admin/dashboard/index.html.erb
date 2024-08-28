@@ -1,7 +1,11 @@
 <h1>Admin Panel</h1>
 
-<%= link_to 'New Brand', new_admin_brand_path, class: 'btn btn-primary mb-3' %>
-<%= link_to 'Import Data', '#', class: 'btn btn-secondary mb-3' %>
+<div class="button-container">
+  <%= link_to 'Import Data', '#', class: 'btn btn-primary mb-3' %>
+  <%= button_to 'Delete Data', delete_all_admin_brands_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger mb-3' %>
+</div>
+
+<%= link_to 'New Brand', new_admin_brand_path, class: 'btn btn-primary mb-3', style: 'background-color: #17B169;' %>
 
 <table class="table">
   <thead>

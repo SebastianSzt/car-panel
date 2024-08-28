@@ -27,6 +27,11 @@ module Admin
       redirect_to admin_root_path, notice: "Brands were successfully imported."
     end
 
+    def delete_all
+      Brand.destroy_all
+      redirect_to admin_brands_path, notice: "All data was successfully deleted."
+    end
+
     private
 
     def brand_params
