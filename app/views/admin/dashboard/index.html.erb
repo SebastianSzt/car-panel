@@ -1,0 +1,36 @@
+<h1>Admin Panel</h1>
+
+<%= link_to 'New Brand', new_admin_brand_path, class: 'btn btn-primary mb-3' %>
+<%= link_to 'Import Data', '#', class: 'btn btn-secondary mb-3' %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Brand and Modeles</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @brands.each do |brand| %>
+      <tr>
+        <td><%= brand.name %></td>
+        <td>
+          <div class="button-container">
+            <%= button_to 'Delete Brand', admin_brand_path(brand), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%= link_to 'Add Model', new_admin_brand_model_path(brand), class: 'btn btn-primary' %>
+          </div>
+        </td>
+      </tr>
+      <% if brand.models.any? %>
+        <% brand.models.each do |model| %>
+          <tr>
+            <td style="padding-left: 40px;">&bull; <%= model.name %></td>
+            <td>
+              <%= button_to 'Delete Model', admin_brand_model_path(brand, model), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

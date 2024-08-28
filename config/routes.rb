@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    root "dashboard#index"
+    resources :brands, only: [ :index, :new, :create, :destroy ] do
+      resources :models, only: [ :new, :create, :destroy ]
+      collection do
+        post :import
+      end
+    end
+  end
+
   resources :brands do
     resources :models
   end
@@ -8,12 +18,6 @@ Rails.application.routes.draw do
   }
 
   root "brands#index"
-
-  # namespace :admin do
-  #   resources :brands, controller: "brands" do
-  #     resources :models, controller: "models"
-  #   end
-  # end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

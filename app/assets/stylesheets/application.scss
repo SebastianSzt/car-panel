@@ -16,3 +16,8 @@
 
  @import "bootstrap";
  
+ /* app/assets/stylesheets/application.css */
+.button-container {
+  display: flex;
+  gap: 10px; /* Opcjonalnie, aby dodać odstęp między przyciskami */
+}

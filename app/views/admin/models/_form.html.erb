@@ -1,5 +1,5 @@
-<!-- app/views/models/_form.html.erb -->
-<%= form_with(model: [@brand, @model], local: true) do |form| %>
+<!-- app/views/admin/models/_form.html.erb -->
+<%= form_with model: [:admin, @brand, @model], local: true do |form| %>
   <% if @model.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@model.errors.count, "error") %> prohibited this model from being saved:</h2>
