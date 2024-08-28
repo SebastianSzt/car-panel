@@ -1,7 +1,7 @@
 <!-- app/views/brands/index.html.erb -->
 <h1>Brands</h1>
 
-<% if user_signed_in? && current_user.admin? %>
+<% if user_signed_in? && (current_user && current_user.admin?) %>
   <%= link_to 'New Brand', new_brand_path, class: 'btn btn-primary mb-3' %>
   <%= link_to 'Import Data', '#', class: 'btn btn-secondary mb-3' %>
 <% end %>
